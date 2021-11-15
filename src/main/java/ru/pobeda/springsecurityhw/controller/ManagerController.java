@@ -1,7 +1,6 @@
 package ru.pobeda.springsecurityhw.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.pobeda.springsecurityhw.jwt.TokensPair;
 import ru.pobeda.springsecurityhw.model.Employee;
 import ru.pobeda.springsecurityhw.model.Task;
 
@@ -34,7 +32,7 @@ public class ManagerController {
             new Task(2L, "Update properties", "Update properties of db in dev stand")
     );
 
-    @PreAuthorize("hasRole('MANAGER')" + "|| hasRole('SCRUM_MASTER')")
+    @PreAuthorize("hasAnyRole('MANAGER','SCRUM_MASTER')" )
     @GetMapping("/employee/{id}")
     public Employee getEmployee(@PathVariable("id") Integer employeeId) {
         return EMPLOYEES.stream()
@@ -62,7 +60,7 @@ public class ManagerController {
         System.out.println("Emplyee " + employeeId + "is fired");
     }
 
-    @PreAuthorize("hasRole('MANAGER')" + "|| hasRole('SCRUM_MASTER')")
+    @PreAuthorize("hasAnyRole('MANAGER','SCRUM_MASTER')" )
     @PostMapping("/task/{id}")
     public void createTask(@PathVariable("id") String taskId, @RequestBody Task task) {
         System.out.println("Created new task" + task);

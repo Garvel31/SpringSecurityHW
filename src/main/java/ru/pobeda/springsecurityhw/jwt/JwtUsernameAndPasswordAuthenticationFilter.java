@@ -5,12 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.pobeda.springsecurityhw.model.TokensPair;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,9 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -58,7 +55,6 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         TokensPair tokensPair = new TokensPair();
         tokensPair.setAccessToken(jwtProvider.createToken(authResult).replace(BEARER_PREFIX, ""));
         tokensPair.setRefreshToken(jwtProvider.createRefreshToken(authResult).replace(BEARER_PREFIX, ""));
-        response.addHeader(HttpHeaders.AUTHORIZATION, jwtProvider.createToken(authResult));
         response.setContentType("text/json");
         String jsonToken =new ObjectMapper().writeValueAsString(tokensPair);
         PrintWriter writer = response.getWriter();
